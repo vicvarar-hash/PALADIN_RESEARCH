@@ -99,13 +99,14 @@ def render_prediction_lab(tasks: List[AstraTask], personas: List[MCPPersona]):
     intent_engine = IntentEngine(inference_svc=inference_svc)
     
     # Initialize core services using provider/model from sidebar
-    from app.ui.llm_settings import get_llm_config
+    from app.ui.llm_settings import get_llm_config, get_llm_config_error
     llm_cfg = get_llm_config()
-    llm = LLMProvider(
-        api_key=llm_cfg["api_key"],
-        model=llm_cfg["model"],
-        provider=llm_cfg["provider"],
-    )
+    llm = LLMProvider(**llm_cfg)
+    configuration_error = get_llm_config_error(llm_cfg) or llm.configuration_error
+    if configuration_error:
+        st.info(configuration_error)
+    else:
+        st.caption(f"Using {llm_cfg['provider']} / {llm_cfg['model']} from the sidebar.")
     predictor = PredictionService(llm, personas, intent_engine=intent_engine)
     validator = ValidationService(llm, personas)
     comparer = ComparisonService()
@@ -295,8 +296,11 @@ def render_prediction_lab(tasks: List[AstraTask], personas: List[MCPPersona]):
 
             st.divider()
             
-        # Reset results if task context changes
-        context_key = f"{selected_mcp_filter}_{selected_filter}_{task_idx_in_filtered}_{selected_mode}"
+        # Do not show a previous model's result as the current configuration's output.
+        context_key = (
+            selected_mcp_filter, selected_filter, task_idx_in_filtered, selected_mode,
+            llm_cfg["provider"], llm_cfg["model"],
+        )
         if st.session_state.get("last_context_key") != context_key:
             st.session_state["last_run_data"] = None
             st.session_state["last_context_key"] = context_key
@@ -323,9 +327,10 @@ def render_prediction_lab(tasks: List[AstraTask], personas: List[MCPPersona]):
                 st.json(task.groundtruth_tools)
     
     # Execution Button
-    if st.button("🚀 Run Execution Pipeline", use_container_width=True):
+    if st.button("🚀 Run Execution Pipeline", use_container_width=True,
+                 disabled=bool(configuration_error)):
         if not llm.is_configured():
-            st.error("OpenAI API Key is missing. Please check the sidebar settings.")
+            st.error(llm.configuration_error)
         else:
             with st.spinner("Executing LLM Reasoning & Policy Engine..."):
                 from app.models.selection import SelectionResult
@@ -335,6 +340,8 @@ def render_prediction_lab(tasks: List[AstraTask], personas: List[MCPPersona]):
                 # Context Bundle for Audit
                 experiment_context = {
                     "mode": selected_mode,
+                    "provider": llm_cfg["provider"],
+                    "model": llm_cfg["model"],
                     "caller_label": selected_caller_label,
                     "spiffe_id": caller_spiffe_id,
                     "id_source": id_source,
@@ -499,7 +506,8 @@ def render_prediction_lab(tasks: List[AstraTask], personas: List[MCPPersona]):
         if state_key not in st.session_state:
             st.session_state[state_key] = None
         
-        if st.button("🚀 Generate Logic Post-Mortem & Strategic Advice", key=f"btn_{state_key}"):
+        if st.button("🚀 Generate Logic Post-Mortem & Strategic Advice", key=f"btn_{state_key}",
+                     disabled=bool(configuration_error)):
             with st.spinner("LLM Auditor analyzing execution trace..."):
                 assessment = auditor.generate_assessment(
                     task=task.task,
@@ -787,4 +795,3 @@ def _render_phase_3(decision: DecisionResult, comparison: Any, mode: str = "vali
                     st.success(step)
                 else:
                     st.info(step)
-

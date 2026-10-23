@@ -476,7 +476,9 @@ def build_llm_cache(tasks: list, personas_list, api_key: str,
                     max_retries: int = 2,
                     retriever: Optional[Any] = None,
                     rbac_scoped: bool = False,
-                    capability_filter: bool = False) -> Dict[str, dict]:
+                    capability_filter: bool = False, *,
+                    endpoint: Optional[str] = None,
+                    api_version: Optional[str] = None) -> Dict[str, dict]:
     """Call the LLM once per unique task and cache results.
 
     Behavior depends on ``mode``:
@@ -510,9 +512,10 @@ def build_llm_cache(tasks: list, personas_list, api_key: str,
     from app.services.intent_engine import IntentEngine
     from app.services.experiment_config import LEGITIMATE_PAIRINGS
 
-    llm = LLMProvider(api_key=api_key, model=model, provider=provider)
+    llm = LLMProvider(api_key=api_key, model=model, provider=provider,
+                      endpoint=endpoint, api_version=api_version)
     if not llm.is_configured():
-        raise ValueError(f"LLM provider {provider!r} not configured — check API key")
+        raise ValueError(llm.configuration_error)
 
     if mode not in ("selection", "validation"):
         raise ValueError(f"Unsupported mode: {mode!r} (expected 'selection' or 'validation')")

@@ -191,7 +191,7 @@ Trust domain: `spiffe://demo.local`
 |-----------|------------|
 | **Frontend** | Streamlit |
 | **Language** | Python 3.12 |
-| **LLM** | OpenAI GPT (configurable model) |
+| **LLM** | OpenAI, Anthropic, Google Gemini, or Azure AI Foundry (configurable model/deployment) |
 | **Identity** | SPIFFE/SPIRE 1.9.6 |
 | **Policy Baseline** | OPA-equivalent Rego engine (Python) |
 | **Hosting** | Azure Container Apps |
@@ -204,7 +204,7 @@ Trust domain: `spiffe://demo.local`
 
 ### Prerequisites
 - Python 3.10+ (3.12 recommended)
-- OpenAI API key (for LLM-powered experiments)
+- An API key for your chosen LLM provider (for LLM-powered experiments)
 - Docker (optional — for local SPIRE infrastructure)
 
 ### Quick Start
@@ -224,7 +224,28 @@ python deploy_spire.py
 streamlit run main.py
 ```
 
-Configure your **OpenAI API key** in the Streamlit sidebar.
+### LLM provider settings
+
+In the sidebar's **LLM Settings**, choose **OpenAI**, **Anthropic (Claude)**,
+**Google (Gemini)**, or **Azure AI Foundry**, then enter your own **API key** in
+the password field. Select a model preset or **Custom model...** to enter any
+text/JSON-capable model ID available to your provider account.
+
+For Azure, select a deployment or **Custom deployment...**, and supply your
+Azure OpenAI-compatible **resource endpoint** and **API version**. Use the
+deployment name from your resource, not the underlying model ID.
+
+User-entered keys and provider-specific choices are held only in the current app session
+and survive switching providers; they are not written to configuration files
+or the process environment. Delete the password-field value to clear your key.
+Prediction Lab, its AI post-mortem, and Experiment LLM Lab use these same settings.
+Changing settings makes no API calls. **Test connection** sends a small request
+to the selected model and may incur provider charges.
+
+**Only user-provided keys are accepted.** There is no server-credentials option
+and no API-key fallback to `.env` or process environment variables. Leaving the
+key empty disables LLM actions for that provider; browsing the app remains
+available. Programmatic `LLMProvider` callers must also pass an explicit key.
 
 ### Azure Deployment
 
@@ -321,4 +342,3 @@ Infrastructure is defined in `infra/` using Bicep (ACR + Container Apps Environm
 This project is a research platform for studying layered policy governance over LLM-based agentic systems.
 
 © 2026 PALADIN — Policy-Aware Layered Agentic Decision Intelligence
-

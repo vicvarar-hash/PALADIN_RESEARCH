@@ -52,6 +52,8 @@ def produce_inference_log(
     use_bm25_raicl: bool = False,
     k: int = DEFAULT_BM25_K,
     progress_cb: Optional[Callable[[dict], None]] = None,
+    endpoint: Optional[str] = None,
+    api_version: Optional[str] = None,
 ) -> dict:
     """Run LLM inference over the dataset and return an ``llm_inference_v1`` log dict.
 
@@ -82,6 +84,7 @@ def produce_inference_log(
     cache = build_llm_cache(
         infer_tasks, personas, api_key=api_key, model=model, provider=provider,
         mode=mode, progress_callback=progress_cb, retriever=retriever,
+        endpoint=endpoint, api_version=api_version,
     )
 
     out_tasks: List[dict] = []

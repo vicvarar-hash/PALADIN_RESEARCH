@@ -34,16 +34,14 @@ def render_experiment_lab(tasks, personas):
     )
 
     # Provider / model / key come from the sidebar (shared with the Prediction Lab).
-    from app.ui.llm_settings import get_llm_config
+    from app.ui.llm_settings import get_llm_config, get_llm_config_error
     cfg = get_llm_config()
     provider, model, api_key = cfg["provider"], cfg["model"], cfg["api_key"]
-    if api_key:
-        st.success(f"Using **{provider}** / `{model}` (configured in the sidebar)")
+    configuration_error = get_llm_config_error(cfg)
+    if configuration_error:
+        st.info(configuration_error)
     else:
-        st.error(
-            f"⚠️ No API key found for **{provider}**. Add it to `.env` and restart, "
-            f"then choose the provider in the sidebar."
-        )
+        st.success(f"Using **{provider}** / `{model}` (configured in the sidebar)")
 
     c1, c2 = st.columns([2, 3])
     with c1:
@@ -65,7 +63,7 @@ def render_experiment_lab(tasks, personas):
     cohort = "30% test cohort (+ wrong/null)" if use_raicl else f"full dataset · {len(tasks):,} tasks"
     st.caption(f"One LLM call per task · {cohort}.")
 
-    run = st.button("🤖 Run LLM inference", type="primary", disabled=not api_key,
+    run = st.button("🤖 Run LLM inference", type="primary", disabled=bool(configuration_error),
                     use_container_width=True)
 
     if run:
@@ -82,6 +80,7 @@ def render_experiment_lab(tasks, personas):
         try:
             path, log = produce_and_save(
                 tasks, personas, model=model, provider=provider, api_key=api_key,
+                endpoint=cfg["endpoint"], api_version=cfg["api_version"],
                 mode=mode, use_bm25_raicl=use_raicl, k=DEFAULT_BM25_K, progress_cb=cb,
             )
         except Exception as e:  # noqa: BLE001 — surface any provider/setup error to the UI
