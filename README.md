@@ -3,8 +3,6 @@
 A composable governance framework for securing LLM-based agentic tool selection
 through layered identity, attribute, and formal logic policies.
 
-> **Anonymous artifact (for review):** https://anonymous.4open.science/r/PALADIN-anon
-
 ---
 
 ## Problem Statement
