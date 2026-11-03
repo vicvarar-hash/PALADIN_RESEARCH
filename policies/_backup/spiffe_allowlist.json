@@ -1,8 +1,0 @@
-{
-  "allowed_callers": [
-    "spiffe://demo.local/agent/devops",
-    "spiffe://demo.local/agent/incident",
-    "spiffe://demo.local/agent/research",
-    "spiffe://demo.local/service/gateway"
-  ]
-}

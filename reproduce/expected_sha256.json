@@ -1,0 +1,16 @@
+{
+  "sel_claude-opus-4-8_none.json": "0704fbc13b357aeff6ca9db21cd44f0ab1f1bd7a233e8e0801d1bf73a25432f0",
+  "sel_gpt-3.5-turbo_none.json": "1af5733f09d83cdde7fa6d30b798fbe32a1aa77fb0ea7edaa46fd351db17b3be",
+  "sel_gpt-4o_none.json": "96d7a5f9f93d11d0e8bb2e5c7d0eca2d9852f83c54477d53604ddddecd426205",
+  "sel_gpt-5.4_bm25.json": "2453a1551f8d61295cea53b8df989495507f9e6f0c84036bdc309558368da46f",
+  "sel_gpt-5.4_none.json": "1980448aaabb22e9f2b43992dd05c40d9f44f938b80537b844cfff5727463594",
+  "sel_gpt-5.4_random.json": "a5f402ca599cad567466656ff5f922bb9296a25db63f933f39760ca93743c119",
+  "val_gemini-2.5-pro_r0.json": "53d6901e482612c59c1e90bafd8bc204ce435f6f32fd6a2619e001c16bb22e94",
+  "val_gemini-2.5-pro_r4.json": "edc4e077de99219fc0d0fd12de3d1b672ed8660f06d09437218f07ccc2026143",
+  "val_gpt-3.5-turbo-16k_r0.json": "d4bb985aeaed8e419b7cce8344ce85b4af5a1dbdb60cff238d915031cea9d450",
+  "val_gpt-3.5-turbo-16k_r4.json": "0768b403df5909a451dffa6b852f9b1559cd1903040915527646bb886772ffad",
+  "val_gpt-4o_r0.json": "f792ad4f05dcff9fdfa11319e88f0e1d92ced1dffbcd7477f61e06e4b126ae6e",
+  "val_gpt-4o_r4.json": "3fd5bb8256181e9549a03799eb2ec5f0fe97ac3ef5a88ff499a2e5ae81d84581",
+  "val_gpt-5.4_r0.json": "24b86424da4e60fa4a70f23167d2f218c034b1416211f4cd91dc4c9799643eb5",
+  "val_gpt-5.4_r4.json": "e9478c326dd18e5d58a7ca93ae442fffe2417cb9d7296490048c0ab3b4303b39"
+}

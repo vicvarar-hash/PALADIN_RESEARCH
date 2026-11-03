@@ -1,0 +1,58 @@
+==============================================================================
+VALIDATION (agnostic engine, rescue=4.0)  n=6942
+==============================================================================
+model              | layer            F1  SecFail   admit
+gpt-4o             | E1 full-det   0.848   0.1029   44.8%
+gpt-4o             | E2 -RBAC      0.751   0.3100   63.0%
+gpt-4o             | E3 TRAC-only  0.591   0.5436   77.7%
+gpt-4o             | E4 LLM-only   0.760   0.2675   50.9%
+gpt-4o             | FULL +LLMgate  0.859   0.0211   24.8%
+
+gpt-5.4            | E1 full-det   0.848   0.1029   44.8%
+gpt-5.4            | E2 -RBAC      0.751   0.3100   63.0%
+gpt-5.4            | E3 TRAC-only  0.591   0.5436   77.7%
+gpt-5.4            | E4 LLM-only   0.482   0.6649   85.8%
+gpt-5.4            | FULL +LLMgate  0.850   0.0733   36.6%
+
+gemini-2.5-pro     | E1 full-det   0.848   0.1029   44.8%
+gemini-2.5-pro     | E2 -RBAC      0.751   0.3100   63.0%
+gemini-2.5-pro     | E3 TRAC-only  0.591   0.5436   77.7%
+gemini-2.5-pro     | E4 LLM-only   0.535   0.6284   95.9%
+gemini-2.5-pro     | FULL +LLMgate  0.869   0.0590   43.8%
+
+gpt-3.5-turbo-16k  | E1 full-det   0.848   0.1029   44.8%
+gpt-3.5-turbo-16k  | E2 -RBAC      0.751   0.3100   63.0%
+gpt-3.5-turbo-16k  | E3 TRAC-only  0.591   0.5436   77.7%
+gpt-3.5-turbo-16k  | E4 LLM-only   0.652   0.4820   82.3%
+gpt-3.5-turbo-16k  | FULL +LLMgate  0.870   0.0435   38.8%
+
+==============================================================================
+CORROBORATED COVERAGE (validation, rescue 0 vs 4.0)
+==============================================================================
+model              | rescue det_SecF det_adm full_SecF full_adm
+gpt-4o             |      0   0.1021   43.8%    0.0203    24.0%
+gpt-4o             |      4   0.1029   44.8%    0.0211    24.8%
+
+gpt-5.4            |      0   0.1021   43.8%    0.0729    36.2%
+gpt-5.4            |      4   0.1029   44.8%    0.0733    36.6%
+
+gemini-2.5-pro     |      0   0.1021   43.8%    0.0590    42.7%
+gemini-2.5-pro     |      4   0.1029   44.8%    0.0590    43.8%
+
+gpt-3.5-turbo-16k  |      0   0.1021   43.8%    0.0435    37.9%
+gpt-3.5-turbo-16k  |      4   0.1029   44.8%    0.0435    38.8%
+
+==============================================================================
+SELECTION (agnostic engine, full det stack, rescue=4.0)
+==============================================================================
+model              retr        n |     F1  SecFail   admit
+claude-opus-4-8_none         768 |  0.764   0.0000   53.0%
+gpt-3.5-turbo_none          6942 |  0.771   0.1617   15.5%
+gpt-4o_none                 6942 |  0.802   0.2038   52.3%
+gpt-5.4_bm25                4512 |  0.907   0.0574   10.1%
+gpt-5.4_none                6942 |  0.800   0.2191   56.9%
+gpt-5.4_random              4512 |  0.905   0.0620   10.5%
+
+--- RA-ICL paired (gpt-5.4, common cohort by (task_idx, persona)) ---
+  cohort=4512 none.SecFail=0.1321 bm25.SecFail=0.0574 (ΔSecFail=-0.0747)  none.admit=56.9% bm25.admit=10.1%
+  cohort=4512 none.SecFail=0.1321 random.SecFail=0.0620 (ΔSecFail=-0.0701)  none.admit=56.9% random.admit=10.5%
